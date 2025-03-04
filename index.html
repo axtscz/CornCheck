@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meeting Attendance</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap");
+
+      body {
+        font-family: "Inter", sans-serif;
+        transition: background 0.3s, color 0.3s;
+        background: #f8f9fa;
+        color: #212529;
+        text-align: center;
+        margin: 0;
+      }
+      .dark-mode {
+        background: #212529;
+        color: #f8f9fa;
+      }
+      .navbar {
+        display: flex;
+        align-items: center;
+        padding: 5px 15px;
+        background: #343a40;
+        color: white;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: 40px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+      .toggle-container {
+        margin-left: 20px;
+      }
+      .dark-mode .navbar {
+        background: #1d2124;
+      }
+
+      .container {
+        width: 75%;
+        max-width: 800px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        margin: 60px auto 20px;
+      }
+      @media (max-width: 600px) {
+        .container {
+          width: 90%;
+        }
+      }
+      .dark-mode .container {
+        background: rgba(33, 37, 41, 0.9);
+      }
+      #attendees {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+        justify-content: center;
+        padding: 10px;
+      }
+      label {
+        display: flex;
+        align-items: center;
+        padding: 5px;
+        white-space: nowrap;
+      }
+    </style>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="navbar">
+      <h3>Attendance</h3>
+      <div class="toggle-container">
+        <label class="toggle">
+          <input
+            class="toggle-checkbox"
+            type="checkbox"
+            checked
+            onchange="toggleDarkMode()"
+          />
+          <div class="toggle-switch"></div>
+          <span class="toggle-label">Dark Mode</span>
+        </label>
+      </div>
+    </div>
+    <div class="container">
+      <h2>Meeting Attendance</h2>
+      <div id="attendees"></div>
+      <p id="output">Present(0):</p>
+    </div>
+    <script>
+      async function loadNames() {
+        try {
+          const response = await fetch("names.json");
+          const names = await response.json();
+          const attendeesDiv = document.getElementById("attendees");
+          attendeesDiv.innerHTML = names
+            .map(
+              (name) =>
+                `<label><input type="checkbox" value="${name}" onchange="updateAttendance()"> ${name}</label>`
+            )
+            .join("");
+        } catch (error) {
+          console.error("Error loading names:", error);
+        }
+      }
+
+      function updateAttendance() {
+        const checkboxes = document.querySelectorAll(
+          '#attendees input[type="checkbox"]'
+        );
+        const selected = Array.from(checkboxes)
+          .filter((checkbox) => checkbox.checked)
+          .map((checkbox) => checkbox.value);
+        document.getElementById("output").textContent = `Present(${
+          selected.length
+        }): ${selected.join(", ")}`;
+      }
+
+      function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+      }
+
+      loadNames();
+    </script>
+  </body>
+</html>
