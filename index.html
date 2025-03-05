@@ -124,7 +124,25 @@
       function toggleDarkMode() {
         document.body.classList.toggle("dark-mode");
       }
+      function loadDarkModePreference() {
+        const isDarkMode = localStorage.getItem("darkMode") === "true";
+        if (isDarkMode) {
+          toggleDarkMode();
+          document.querySelector(".toggle-checkbox").checked = true;
+        }
+      }
 
+      function saveDarkModePreference(isDarkMode) {
+        localStorage.setItem("darkMode", isDarkMode);
+      }
+
+      document
+        .querySelector(".toggle-checkbox")
+        .addEventListener("change", function () {
+          saveDarkModePreference(!this.checked);
+        });
+
+      loadDarkModePreference();
       loadNames();
     </script>
   </body>
