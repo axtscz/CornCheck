@@ -4,94 +4,52 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Meeting Attendance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap");
 
       body {
         font-family: "Inter", sans-serif;
-        transition: background 0.3s, color 0.3s;
-        background: #f8f9fa;
-        color: #212529;
-        text-align: center;
-        margin: 0;
-      }
-      .dark-mode {
-        background: #212529;
-        color: #f8f9fa;
-      }
-      .navbar {
-        display: flex;
-        align-items: center;
-        padding: 5px 15px;
-        background: #343a40;
-        color: white;
-        position: fixed;
-        top: 0;
-        width: 100%;
-        height: 40px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      }
-      .toggle-container {
-        margin-left: 20px;
-      }
-      .dark-mode .navbar {
-        background: #1d2124;
-      }
-
-      .container {
-        width: 75%;
-        max-width: 800px;
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        margin: 60px auto 20px;
-      }
-      @media (max-width: 600px) {
-        .container {
-          width: 90%;
-        }
-      }
-      .dark-mode .container {
-        background: rgba(33, 37, 41, 0.9);
-      }
-      #attendees {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 10px;
-        justify-content: center;
-        padding: 10px;
-      }
-      label {
-        display: flex;
-        align-items: center;
-        padding: 5px;
-        white-space: nowrap;
       }
     </style>
-    <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
-    <div class="navbar">
-      <h3>Attendance</h3>
-      <div class="toggle-container">
-        <label class="toggle">
+  <body
+    class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-all"
+  >
+    <div
+      class="navbar fixed top-0 w-full h-10 bg-gray-800 text-white flex items-center px-4 shadow-md dark:bg-gray-700"
+    >
+      <h3 class="text-lg font-semibold">Attendance</h3>
+      <div class="toggle-container ml-5">
+        <label class="toggle relative inline-flex items-center cursor-pointer">
           <input
-            class="toggle-checkbox"
+            class="toggle-checkbox sr-only peer"
             type="checkbox"
             checked
             onchange="toggleDarkMode()"
           />
-          <div class="toggle-switch"></div>
-          <span class="toggle-label">Dark Mode</span>
+          <div
+            class="toggle-switch w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gray-300 dark:peer-focus:ring-gray-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+          ></div>
+          <span class="toggle-label ml-3 text-sm font-medium">Dark Mode</span>
         </label>
       </div>
     </div>
-    <div class="container">
-      <h2>Meeting Attendance</h2>
-      <div id="attendees"></div>
-      <button onclick="resetCheckboxes()">Reset</button>
-      <p id="output">Present(0):</p>
+    <div
+      class="container w-3/4 max-w-2xl p-5 bg-white rounded-lg shadow-md mx-auto mt-16 dark:bg-gray-800"
+    >
+      <h2 class="text-2xl font-bold mb-4">Meeting Attendance</h2>
+      <div
+        id="attendees"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 p-2"
+      ></div>
+      <button
+        onclick="resetCheckboxes()"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+      >
+        Reset
+      </button>
+      <p id="output" class="mt-4">Present(0):</p>
     </div>
     <script>
       async function loadNames() {
@@ -102,7 +60,7 @@
           attendeesDiv.innerHTML = names
             .map(
               (name) =>
-                `<label><input type="checkbox" value="${name}" onchange="updateAttendance()"> ${name}</label>`
+                `<label class="flex items-center p-1 whitespace-nowrap"><input type="checkbox" value="${name}" onchange="updateAttendance()" class="form-checkbox h-4 w-4 text-blue-600 rounded mr-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-blue-500"> ${name}</label>`
             )
             .join("");
         } catch (error) {
@@ -137,6 +95,8 @@
           const checkboxes = document.querySelectorAll(
             '#attendees input[type="checkbox"]'
           );
+          console.log(checkboxes);
+
           checkboxes.forEach((checkbox) => {
             if (selected.includes(checkbox.value)) {
               checkbox.checked = true;
