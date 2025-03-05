@@ -90,6 +90,7 @@
     <div class="container">
       <h2>Meeting Attendance</h2>
       <div id="attendees"></div>
+      <button onclick="resetCheckboxes()">Reset</button>
       <p id="output">Present(0):</p>
     </div>
     <script>
@@ -109,6 +110,51 @@
         }
       }
 
+      function resetCheckboxes() {
+        const checkboxes = document.querySelectorAll(
+          '#attendees input[type="checkbox"]'
+        );
+        checkboxes.forEach((checkbox) => {
+          checkbox.checked = false;
+        });
+        updateAttendance();
+      }
+
+      function saveAttendance() {
+        const checkboxes = document.querySelectorAll(
+          '#attendees input[type="checkbox"]'
+        );
+        const selected = Array.from(checkboxes)
+          .filter((checkbox) => checkbox.checked)
+          .map((checkbox) => checkbox.value);
+        localStorage.setItem("attendance", JSON.stringify(selected));
+      }
+
+      function loadAttendance() {
+        const savedAttendance = localStorage.getItem("attendance");
+        if (savedAttendance) {
+          const selected = JSON.parse(savedAttendance);
+          const checkboxes = document.querySelectorAll(
+            '#attendees input[type="checkbox"]'
+          );
+          console.log(checkboxes);
+
+          checkboxes.forEach((checkbox) => {
+            if (selected.includes(checkbox.value)) {
+              checkbox.checked = true;
+            }
+          });
+        }
+      }
+      document.addEventListener("DOMContentLoaded", function () {
+        const checkboxes = document.querySelectorAll(
+          '#attendees input[type="checkbox"]'
+        );
+        checkboxes.forEach((checkbox) => {
+          checkbox.addEventListener("change", saveAttendance);
+        });
+      });
+
       function updateAttendance() {
         const checkboxes = document.querySelectorAll(
           '#attendees input[type="checkbox"]'
@@ -119,11 +165,13 @@
         document.getElementById("output").textContent = `Present(${
           selected.length
         }): ${selected.join(", ")}`;
+        saveAttendance();
       }
 
       function toggleDarkMode() {
         document.body.classList.toggle("dark-mode");
       }
+
       function loadDarkModePreference() {
         const isDarkMode = localStorage.getItem("darkMode") === "true";
         if (isDarkMode) {
@@ -144,6 +192,10 @@
 
       loadDarkModePreference();
       loadNames();
+
+      window.onload = function () {
+        loadAttendance();
+      };
     </script>
   </body>
 </html>
